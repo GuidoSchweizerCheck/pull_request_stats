@@ -1,0 +1,21 @@
+<h1 class="text-2xl">Stats for <%= @repository&.key || "all Repositories" %></h1>
+
+<div class="grid grid-cols-2 gap-4">
+  <div>
+    <h2 class="text-xl">Pull Request Creations</h2>
+
+    <%= render(
+      "_count_table",
+      locals: { counts: @pull_request_counts, developers: @developers }
+    ) %>
+  </div>
+
+  <div>
+    <h2 class="text-xl">Pull Request Reviews</h2>
+
+    <%= render(
+      "_count_table",
+      locals: { counts: @reviews, developers: @developers }
+    ) %>
+  </div>
+</div>

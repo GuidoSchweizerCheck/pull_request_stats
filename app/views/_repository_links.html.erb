@@ -1,0 +1,17 @@
+<div>
+  <h2 class="text-xl"><%= title %></h2>
+
+  <ul>
+    <li>
+      <a class="underline text-blue-500" href="<%= path %>">All Stats</a>
+    </li>
+
+    <% years.reverse.each do |year| %>
+      <li>
+        <a class="underline text-blue-500" href="<%= "#{path}/#{year}" %>">
+          <%= year %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</div>

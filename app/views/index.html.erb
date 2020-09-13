@@ -1,21 +1,15 @@
-<h1 class="text-2xl">Stats for all Repositories</h1>
+<h1 class="text-2xl">Pull Request Stats</h1>
 
-<div class="grid grid-cols-2 gap-4">
-  <div>
-    <h2 class="text-xl">Pull Request Creations</h2>
+<div class="grid grid-flow-col gap-4">
+  <%= render(
+    "_repository_links",
+    locals: { title: "All Repositories", path: "/all", years: PullRequest.years }
+  ) %>
 
+  <% @repositories.each do |repository| %>
     <%= render(
-      "_count_table",
-      locals: { counts: @pull_request_counts, developers: @developers }
+      "_repository_links",
+      locals: { title: repository.key, path: "/#{repository.key}", years: repository.years }
     ) %>
-  </div>
-
-  <div>
-    <h2 class="text-xl">Pull Request Reviews</h2>
-
-    <%= render(
-      "_count_table",
-      locals: { counts: @reviews, developers: @developers }
-    ) %>
-  </div>
+  <% end %>
 </div>

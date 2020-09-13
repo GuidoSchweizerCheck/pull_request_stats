@@ -19,13 +19,49 @@ class App < Roda
 
   route do |r|
     r.root do
-      @developers = Developer.all
-      @pull_request_counts = PullRequest
-        .group_and_count(:author_id).order(:count).reverse.all
-      @reviews = Review.distinct_pull_request_reviews
-        .group_and_count(:author_id).order(:count).reverse.all
+      @repositories = Repository.order(:id).all
 
-      view("index")
+      view(:index)
+    end
+
+    r.get("all") do
+      @developers = Developer.all
+      @pull_request_counts = PullRequest.group_and_count_by_author
+      @reviews = Review.distinct_pull_request_reviews.group_and_count_by_author
+
+      view(:repository)
+    end
+
+    r.get("all", Integer) do |year|
+      @developers = Developer.all
+      @pull_request_counts = PullRequest.in_year(year).group_and_count_by_author
+      @reviews = Review.in_year(year).distinct_pull_request_reviews
+        .group_and_count_by_author
+
+      view(:repository)
+    end
+
+    r.get(String, String) do |owner, name|
+      @repository = Repository.first(owner: owner, name: name)
+      @developers = Developer.all
+      @pull_request_counts = PullRequest.for_repository(@repository)
+        .group_and_count_by_author
+      @reviews = Review.distinct_pull_request_reviews(repository_id: @repository.id)
+        .group_and_count_by_author
+
+      view(:repository)
+    end
+
+    r.get(String, String, Integer) do |owner, name, year|
+      @repository = Repository.first(owner: owner, name: name)
+      @developers = Developer.all
+      @pull_request_counts = PullRequest.in_year(year).for_repository(@repository)
+        .group_and_count_by_author
+      @reviews = Review.in_year(year)
+        .distinct_pull_request_reviews(repository_id: @repository.id)
+        .group_and_count_by_author
+
+      view(:repository)
     end
   end
 end
