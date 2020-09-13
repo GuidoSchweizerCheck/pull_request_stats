@@ -11,6 +11,12 @@ require "./app/pull_repository_data"
 class App < Roda
   plugin :render, engine: "html.erb", views: "app/views"
 
+  if ENV["RACK_ENV"] == "production"
+    use Rack::Auth::Basic, "Restricted Area" do |username, password|
+      username == ENV.fetch("USERNAME") && password == ENV.fetch("PASSWORD")
+    end
+  end
+
   route do |r|
     r.root do
       @developers = Developer.all
