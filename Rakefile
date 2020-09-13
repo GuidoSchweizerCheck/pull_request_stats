@@ -1,4 +1,4 @@
-require "dotenv/load"
+require "dotenv/load" unless ENV["RACK_ENV"] == "production"
 require "rake"
 
 namespace :db do
