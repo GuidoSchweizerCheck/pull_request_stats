@@ -26,3 +26,10 @@ task :update_data do
     PullRepositoryData.new(repository).call
   end
 end
+
+desc "Dump Github's GraphQL schema"
+task :dump_graphql_schema do
+  require "./app/github_client"
+
+  GraphQL::Client.dump_schema(GithubHTTP, __dir__ + "/app/github_schema.json")
+end
