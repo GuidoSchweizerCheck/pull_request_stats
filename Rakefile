@@ -5,7 +5,7 @@ namespace :db do
   desc "Migrate the database"
   task :migrate, [:version] do |t, args|
     require "sequel/core"
-    require "./db"
+    require "./app/db"
 
     version = args[:version].to_i if args[:version]
     Sequel.extension(:migration)

@@ -2,14 +2,14 @@ require "dotenv/load"
 require "roda"
 require "tilt"
 
-require "./db"
-require "./github_client"
-require "./pull_request_query"
-require "./models"
-require "./pull_repository_data"
+require "./app/db"
+require "./app/github_client"
+require "./app/pull_request_query"
+require "./app/models"
+require "./app/pull_repository_data"
 
 class App < Roda
-  plugin :render, engine: "html.erb"
+  plugin :render, engine: "html.erb", views: "app/views"
 
   route do |r|
     r.root do
