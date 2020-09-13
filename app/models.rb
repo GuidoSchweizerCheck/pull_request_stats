@@ -60,12 +60,10 @@ class Review < Sequel::Model
 
   dataset_module do
     def distinct_pull_request_reviews(repository_id: nil)
-      dataset = self
+      dataset = join(:pull_requests, id: :pull_request_id)
+        .where(Sequel.lit("pull_requests.author_id != reviews.author_id"))
 
-      if repository_id
-        dataset = dataset.join(:pull_requests, id: :pull_request_id)
-          .where(repository_id: repository_id)
-      end
+      dataset = dataset.where(repository_id: repository_id) if repository_id
 
       dataset.group(:pull_request_id, Sequel[:reviews][:author_id])
         .distinct
