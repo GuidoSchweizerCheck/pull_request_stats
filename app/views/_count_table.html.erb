@@ -1,0 +1,20 @@
+<table class="shadow-lg bg-white w-full">
+  <thead>
+    <tr>
+      <th class="bg-blue-100 border text-left px-4 py-2">Author</th>
+      <th class="bg-blue-100 border text-left px-4 py-2">Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% counts.each_with_index do |count_hash, index| %>
+      <% author = developers.find { |developer| developer.id == count_hash[:author_id] } %>
+      <tr>
+        <td class="border px-4 py-2">
+          <img class="inline-block h-5 rounded-full" src="<%= author.avatar_url %>">
+          <%= author.login %>
+        </td>
+        <td class="border px-4 py-2"><%= count_hash[:count] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

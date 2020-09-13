@@ -13,6 +13,12 @@ class App < Roda
 
   route do |r|
     r.root do
+      @developers = Developer.all
+      @pull_request_counts = PullRequest
+        .group_and_count(:author_id).order(:count).reverse.all
+      @reviews = Review.distinct_pull_request_reviews
+        .group_and_count(:author_id).order(:count).reverse.all
+
       view("index")
     end
   end
