@@ -33,6 +33,7 @@ class App < Roda
     end
 
     r.get("all", Integer) do |year|
+      @year = year
       @developers = Developer.all
       @pull_request_counts = PullRequest.in_year(year).group_and_count_by_author
       @reviews = Review.in_year(year).distinct_pull_request_reviews
@@ -54,6 +55,7 @@ class App < Roda
 
     r.get(String, String, Integer) do |owner, name, year|
       @repository = Repository.first(owner: owner, name: name)
+      @year = year
       @developers = Developer.all
       @pull_request_counts = PullRequest.in_year(year).for_repository(@repository)
         .group_and_count_by_author
