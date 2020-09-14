@@ -9,9 +9,17 @@ module SequelQueries
         end
 
         def in_year(year)
-          condition = "EXTRACT(year from #{first_source_table}.created_at) = ?"
+          in_time("year", year)
+        end
 
-          where(Sequel.lit(condition, year))
+        def in_month(month)
+          in_time("month", month)
+        end
+
+        def in_time(name, value)
+          condition = "EXTRACT(#{name} from #{first_source_table}.created_at) = ?"
+
+          where(Sequel.lit(condition, value))
         end
       end
     end
@@ -28,8 +36,8 @@ class Repository < Sequel::Model
     "#{owner}/#{name}"
   end
 
-  def years
-    PullRequest.where(repository_id: id).years
+  def years_and_months
+    PullRequest.where(repository_id: id).years_and_months
   end
 end
 
@@ -44,10 +52,14 @@ class PullRequest < Sequel::Model
       where(repository_id: repository.id)
     end
 
-    def years
-      order(:year)
-        .distinct
-        .select_map(Sequel.lit("DATE_PART('year', created_at)::int").as(:year))
+    def years_and_months
+      order(:year, :month).reverse.distinct.select_map([
+        Sequel.lit("DATE_PART('year', created_at)::int").as(:year),
+        Sequel.lit("DATE_PART('month', created_at)::int").as(:month)
+      ]).each_with_object({}) do |(year, month), hash|
+        hash[year] ||= []
+        hash[year] << month
+      end
     end
   end
 end

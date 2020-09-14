@@ -3,13 +3,23 @@
 <div class="grid grid-flow-col gap-4">
   <%= render(
     "_repository_links",
-    locals: { title: "All Repositories", path: "/all", years: PullRequest.years }
+    locals: {
+      title: "All Repositories",
+      path: "/all",
+      years_and_months: PullRequest.years_and_months,
+      month_names: @month_names
+    }
   ) %>
 
   <% @repositories.each do |repository| %>
     <%= render(
       "_repository_links",
-      locals: { title: repository.key, path: "/#{repository.key}", years: repository.years }
+      locals: { 
+        title: repository.key,
+        path: "/#{repository.key}",
+        years_and_months: repository.years_and_months,
+        month_names: @month_names
+      }
     ) %>
   <% end %>
 </div>

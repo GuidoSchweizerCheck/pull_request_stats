@@ -3,15 +3,23 @@
 
   <ul>
     <li>
-      <a class="underline text-blue-500" href="<%= path %>">All Stats</a>
+      <a class="underline text-blue-600 font-bold" href="<%= path %>">All Stats</a>
     </li>
 
-    <% years.reverse.each do |year| %>
+    <% years_and_months.each do |year, months| %>
       <li>
-        <a class="underline text-blue-500" href="<%= "#{path}/#{year}" %>">
+        <a class="underline text-blue-600 font-bold" href="<%= "#{path}/#{year}" %>">
           <%= year %>
         </a>
       </li>
+
+      <% months.each do |month| %>
+        <li class="pl-3">
+          <a class="underline text-blue-600" href="<%= "#{path}/#{year}/#{month}" %>">
+            <%= month_names[month] %>
+          </a>
+        </li>
+      <% end %>
     <% end %>
   </ul>
 </div>

@@ -20,6 +20,7 @@ class App < Roda
 
   route do |r|
     r.root do
+      @month_names = RepositoryView::MONTH_NAMES
       @repositories = Repository.order(:id).all
 
       view(:index)
@@ -37,6 +38,12 @@ class App < Roda
       view(:repository)
     end
 
+    r.get("all", Integer, Integer) do |year, month|
+      @view = RepositoryView.new(nil, year, month)
+
+      view(:repository)
+    end
+
     r.get(String, String) do |owner, name|
       repository = Repository.first(owner: owner, name: name)
       @view = RepositoryView.new(repository)
@@ -47,6 +54,13 @@ class App < Roda
     r.get(String, String, Integer) do |owner, name, year|
       repository = Repository.first(owner: owner, name: name)
       @view = RepositoryView.new(repository, year)
+
+      view(:repository)
+    end
+
+    r.get(String, String, Integer, Integer) do |owner, name, year, month|
+      repository = Repository.first(owner: owner, name: name)
+      @view = RepositoryView.new(repository, year, month)
 
       view(:repository)
     end
