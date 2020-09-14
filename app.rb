@@ -7,6 +7,7 @@ require "./app/github_client"
 require "./app/pull_request_query"
 require "./app/models"
 require "./app/pull_repository_data"
+require "./app/repository_view"
 
 class App < Roda
   plugin :render, engine: "html.erb", views: "app/views"
@@ -25,43 +26,27 @@ class App < Roda
     end
 
     r.get("all") do
-      @developers = Developer.all
-      @pull_request_counts = PullRequest.group_and_count_by_author
-      @reviews = Review.distinct_pull_request_reviews.group_and_count_by_author
+      @view = RepositoryView.new
 
       view(:repository)
     end
 
     r.get("all", Integer) do |year|
-      @year = year
-      @developers = Developer.all
-      @pull_request_counts = PullRequest.in_year(year).group_and_count_by_author
-      @reviews = Review.in_year(year).distinct_pull_request_reviews
-        .group_and_count_by_author
+      @view = RepositoryView.new(nil, year)
 
       view(:repository)
     end
 
     r.get(String, String) do |owner, name|
-      @repository = Repository.first(owner: owner, name: name)
-      @developers = Developer.all
-      @pull_request_counts = PullRequest.for_repository(@repository)
-        .group_and_count_by_author
-      @reviews = Review.distinct_pull_request_reviews(repository_id: @repository.id)
-        .group_and_count_by_author
+      repository = Repository.first(owner: owner, name: name)
+      @view = RepositoryView.new(repository)
 
       view(:repository)
     end
 
     r.get(String, String, Integer) do |owner, name, year|
-      @repository = Repository.first(owner: owner, name: name)
-      @year = year
-      @developers = Developer.all
-      @pull_request_counts = PullRequest.in_year(year).for_repository(@repository)
-        .group_and_count_by_author
-      @reviews = Review.in_year(year)
-        .distinct_pull_request_reviews(repository_id: @repository.id)
-        .group_and_count_by_author
+      repository = Repository.first(owner: owner, name: name)
+      @view = RepositoryView.new(repository, year)
 
       view(:repository)
     end

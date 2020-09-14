@@ -1,8 +1,4 @@
-<h1 class="text-2xl">
-  Stats for
-  <%= @repository&.key || "all Repositories" %>
-  <%= "in #{@year}" if @year %>
-</h1>
+<h1 class="text-2xl"><%= @view.title%></h1>
 
 <div class="grid grid-cols-2 gap-4">
   <div>
@@ -10,7 +6,7 @@
 
     <%= render(
       "_count_table",
-      locals: { counts: @pull_request_counts, developers: @developers }
+      locals: { counts: @view.pull_request_counts, developers: @view.developers }
     ) %>
   </div>
 
@@ -19,7 +15,7 @@
 
     <%= render(
       "_count_table",
-      locals: { counts: @reviews, developers: @developers }
+      locals: { counts: @view.reviews, developers: @view.developers }
     ) %>
   </div>
 </div>
