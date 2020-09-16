@@ -33,3 +33,10 @@ task :dump_graphql_schema do
 
   GraphQL::Client.dump_schema(GithubHTTP, __dir__ + "/app/github_schema.json")
 end
+
+desc "Add a new repository"
+task :add_repository, [:owner, :name] do |t, args|
+  require "./app"
+
+  Repository.create(owner: args[:owner], name: args[:name])
+end
