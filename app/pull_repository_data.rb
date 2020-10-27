@@ -47,10 +47,14 @@ class PullRepositoryData
 
   def extract_data
     raw_pull_request_data.each do |pull_request_data|
+      next if pull_request_data.author&.__typename != "User"
+
       pull_requests << map_pull_request(pull_request_data)
       developers << map_developer(pull_request_data.author)
 
       pull_request_data.reviews.nodes.each do |review_data|
+        next if review_data.author.nil?
+
         developers << map_developer(review_data.author)
         reviews << map_review(review_data, pull_request_data)
       end
