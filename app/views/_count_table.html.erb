@@ -16,5 +16,10 @@
         <td class="border px-4 py-2"><%= count_hash[:count] %></td>
       </tr>
     <% end %>
+
+    <tr class="bg-blue-100 font-bold">
+      <td class="border px-4 py-2">Total</td>
+      <td class="border px-4 py-2"><%= counts.sum { _1[:count] } %></td>
+    </tr>
   </tbody>
 </table>
