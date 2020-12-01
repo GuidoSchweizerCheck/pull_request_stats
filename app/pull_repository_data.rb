@@ -80,8 +80,9 @@ class PullRepositoryData
 
   def save_data
     DB[:developers].insert_conflict(
-      constraint: :developers_login_key,
+      constraint: :developers_pkey,
       update: {
+        login: Sequel[:excluded][:login],
         avatar_url: Sequel[:excluded][:avatar_url],
         updated_at: Sequel[:excluded][:updated_at]
       }
